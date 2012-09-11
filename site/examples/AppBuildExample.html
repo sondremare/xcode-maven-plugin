@@ -96,9 +96,9 @@
                   
       <li>
     
-                          <a href="../userguide/Advanced Project Structure - Modules.html" title="Advance Project Structure - Modules">
+                          <a href="../userguide/Advanced Project Structure - Modules.html" title="Advanced Project Structure - Modules">
           <i class="none"></i>
-        Advance Project Structure - Modules</a>
+        Advanced Project Structure - Modules</a>
             </li>
                   
       <li>
@@ -250,7 +250,7 @@
                         
         <div id="bodyColumn"  class="span10" >
                                   
-            <div class="section"><h2>Building an iOS App <a name="Building_an_iOS_App"></a></h2><p>This example demonstrates how you can build an iOS app depending on another library using the Xcode plugin. Due to the <tt>xcode-app</tt> packaging all Xcode specific tasks get automatically attached to the Maven lifecycle. I.e. calling <tt>mvn clean install</tt> will resolve the dependencies, compile the Xcode code, perform the signing, package the app and upload it into the local repository.</p><div class="section"><h3>pom.xml<a name="pom.xml"></a></h3><div class="source"><pre class="prettyprint">
+            <div class="section"><h2>Building an iOS App <a name="Building_an_iOS_App"></a></h2><p>This example demonstrates how you can build an iOS app depending on another library using the Xcode plugin. Due to the <tt>xcode-app</tt> packaging all Xcode specific tasks get automatically attached to the Maven lifecycle. I.e. calling <tt>mvn clean install</tt> will resolve the dependencies, compile the Xcode code, perform the signing, package the app and upload it into the local repository. Make sure that your plugin configuration contains the line <tt> &lt;extensions&gt;true&lt;/extensions&gt; </tt> which is needed to enable the Maven lifecycle modification.</p><div class="section"><h3>pom.xml<a name="pom.xml"></a></h3><div class="source"><pre class="prettyprint">
 &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
   xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
