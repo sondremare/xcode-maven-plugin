@@ -74,7 +74,7 @@
 <a class="jxr_linenumber" name="64" href="#64">64</a>  
 <a class="jxr_linenumber" name="65" href="#65">65</a>        <strong class="jxr_keyword">final</strong> Artifact mainArtifact = (Artifact) it.next();
 <a class="jxr_linenumber" name="66" href="#66">66</a>  
-<a class="jxr_linenumber" name="67" href="#67">67</a>        <strong class="jxr_keyword">if</strong> (<span class="jxr_string">"xcode-lib"</span>.equals(mainArtifact.getType())) {
+<a class="jxr_linenumber" name="67" href="#67">67</a>        <strong class="jxr_keyword">if</strong> (PackagingType.LIB.getMavenPackaging().equals(mainArtifact.getType())) {
 <a class="jxr_linenumber" name="68" href="#68">68</a>  
 <a class="jxr_linenumber" name="69" href="#69">69</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> String xcodeConfiguration : configurations) {
 <a class="jxr_linenumber" name="70" href="#70">70</a>  
