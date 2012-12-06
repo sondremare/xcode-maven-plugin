@@ -47,7 +47,7 @@
 <a class="jxr_linenumber" name="37" href="#37">37</a>  <em class="jxr_javadoccomment"> * @goal package-metadata</em>
 <a class="jxr_linenumber" name="38" href="#38">38</a>  <em class="jxr_javadoccomment"> * </em>
 <a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodePackageAppStoreMetaDataMojo.html">XCodePackageAppStoreMetaDataMojo</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/AbstractXCodeMojo.html">AbstractXCodeMojo</a>
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodePackageAppStoreMetaDataMojo.html">XCodePackageAppStoreMetaDataMojo</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/BuildContextAwareMojo.html">BuildContextAwareMojo</a>
 <a class="jxr_linenumber" name="41" href="#41">41</a>  {
 <a class="jxr_linenumber" name="42" href="#42">42</a>  
 <a class="jxr_linenumber" name="43" href="#43">43</a>  
@@ -125,30 +125,34 @@
 <a class="jxr_linenumber" name="115" href="#115">115</a>     String bundleIdentifier = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="116" href="#116">116</a>     <strong class="jxr_keyword">for</strong> (String configuration : getConfigurations()) {
 <a class="jxr_linenumber" name="117" href="#117">117</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="118" href="#118">118</a>         <a href="../../../../../../com/sap/prd/mobile/ios/mios/PListAccessor.html">PListAccessor</a> plistAccessor = getInfoPListAccessor(getXCodeSourceDirectory(), configuration, <span class="jxr_string">"iphoneos"</span>);
-<a class="jxr_linenumber" name="119" href="#119">119</a>         String _bundleIdentifier = plistAccessor.getStringValue(PListAccessor.KEY_BUNDLE_IDENTIFIER);
-<a class="jxr_linenumber" name="120" href="#120">120</a> 
-<a class="jxr_linenumber" name="121" href="#121">121</a>         <strong class="jxr_keyword">if</strong> (bundleIdentifier == <strong class="jxr_keyword">null</strong>)
-<a class="jxr_linenumber" name="122" href="#122">122</a>           bundleIdentifier = _bundleIdentifier;
-<a class="jxr_linenumber" name="123" href="#123">123</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!bundleIdentifier.equals(_bundleIdentifier))
-<a class="jxr_linenumber" name="124" href="#124">124</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(<span class="jxr_string">"Different bundle identifiers defined ("</span> + _bundleIdentifier + <span class="jxr_string">"/"</span>
-<a class="jxr_linenumber" name="125" href="#125">125</a>                 + bundleIdentifier + <span class="jxr_string">")"</span>);
-<a class="jxr_linenumber" name="126" href="#126">126</a>       }
-<a class="jxr_linenumber" name="127" href="#127">127</a>       <strong class="jxr_keyword">catch</strong> (IOException e) {
-<a class="jxr_linenumber" name="128" href="#128">128</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(e.getMessage(), e);
-<a class="jxr_linenumber" name="129" href="#129">129</a>       }
-<a class="jxr_linenumber" name="130" href="#130">130</a> 
-<a class="jxr_linenumber" name="131" href="#131">131</a>     }
-<a class="jxr_linenumber" name="132" href="#132">132</a>     <strong class="jxr_keyword">return</strong> bundleIdentifier;
-<a class="jxr_linenumber" name="133" href="#133">133</a>   }
+<a class="jxr_linenumber" name="118" href="#118">118</a>         
+<a class="jxr_linenumber" name="119" href="#119">119</a>         <a href="../../../../../../com/sap/prd/mobile/ios/mios/PListAccessor.html">PListAccessor</a> plistAccessor = getInfoPListAccessor(XCodeContext.SourceCodeLocation.ORIGINAL, configuration, <span class="jxr_string">"iphoneos"</span>);
+<a class="jxr_linenumber" name="120" href="#120">120</a>         String _bundleIdentifier = plistAccessor.getStringValue(PListAccessor.KEY_BUNDLE_IDENTIFIER);
+<a class="jxr_linenumber" name="121" href="#121">121</a> 
+<a class="jxr_linenumber" name="122" href="#122">122</a>         <strong class="jxr_keyword">if</strong> (bundleIdentifier == <strong class="jxr_keyword">null</strong>)
+<a class="jxr_linenumber" name="123" href="#123">123</a>           bundleIdentifier = _bundleIdentifier;
+<a class="jxr_linenumber" name="124" href="#124">124</a>         <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (!bundleIdentifier.equals(_bundleIdentifier))
+<a class="jxr_linenumber" name="125" href="#125">125</a>           <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(<span class="jxr_string">"Different bundle identifiers defined ("</span> + _bundleIdentifier + <span class="jxr_string">"/"</span>
+<a class="jxr_linenumber" name="126" href="#126">126</a>                 + bundleIdentifier + <span class="jxr_string">")"</span>);
+<a class="jxr_linenumber" name="127" href="#127">127</a>       }
+<a class="jxr_linenumber" name="128" href="#128">128</a>       <strong class="jxr_keyword">catch</strong> (IOException e) {
+<a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(e.getMessage(), e);
+<a class="jxr_linenumber" name="130" href="#130">130</a>       }
+<a class="jxr_linenumber" name="131" href="#131">131</a>       <strong class="jxr_keyword">catch</strong> (XCodeException e) {
+<a class="jxr_linenumber" name="132" href="#132">132</a>         <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException(e.getMessage(), e);
+<a class="jxr_linenumber" name="133" href="#133">133</a>       }
 <a class="jxr_linenumber" name="134" href="#134">134</a> 
-<a class="jxr_linenumber" name="135" href="#135">135</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareAppStoreMetaDataFileForDeployment(<strong class="jxr_keyword">final</strong> MavenProject mavenProject, <strong class="jxr_keyword">final</strong> File appStoreMetaDataFile)
-<a class="jxr_linenumber" name="136" href="#136">136</a>   {
-<a class="jxr_linenumber" name="137" href="#137">137</a> 
-<a class="jxr_linenumber" name="138" href="#138">138</a>     projectHelper.attachArtifact(mavenProject, <span class="jxr_string">"zip"</span>, <span class="jxr_string">"AppStoreMetaData"</span>, appStoreMetaDataFile);
-<a class="jxr_linenumber" name="139" href="#139">139</a>   }
-<a class="jxr_linenumber" name="140" href="#140">140</a> 
-<a class="jxr_linenumber" name="141" href="#141">141</a> }
+<a class="jxr_linenumber" name="135" href="#135">135</a>     }
+<a class="jxr_linenumber" name="136" href="#136">136</a>     <strong class="jxr_keyword">return</strong> bundleIdentifier;
+<a class="jxr_linenumber" name="137" href="#137">137</a>   }
+<a class="jxr_linenumber" name="138" href="#138">138</a> 
+<a class="jxr_linenumber" name="139" href="#139">139</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareAppStoreMetaDataFileForDeployment(<strong class="jxr_keyword">final</strong> MavenProject mavenProject, <strong class="jxr_keyword">final</strong> File appStoreMetaDataFile)
+<a class="jxr_linenumber" name="140" href="#140">140</a>   {
+<a class="jxr_linenumber" name="141" href="#141">141</a> 
+<a class="jxr_linenumber" name="142" href="#142">142</a>     projectHelper.attachArtifact(mavenProject, <span class="jxr_string">"zip"</span>, <span class="jxr_string">"AppStoreMetaData"</span>, appStoreMetaDataFile);
+<a class="jxr_linenumber" name="143" href="#143">143</a>   }
+<a class="jxr_linenumber" name="144" href="#144">144</a> 
+<a class="jxr_linenumber" name="145" href="#145">145</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

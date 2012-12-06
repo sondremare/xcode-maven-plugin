@@ -69,24 +69,24 @@
 <a class="jxr_linenumber" name="59" href="#59">59</a>  <em class="jxr_javadoccomment">   * </em>
 <a class="jxr_linenumber" name="60" href="#60">60</a>  <em class="jxr_javadoccomment">   * @param buildDir</em>
 <a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="62" href="#62">62</a>    <strong class="jxr_keyword">void</strong> packageArtifacts(<strong class="jxr_keyword">final</strong> File compileDir, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; configurations, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; sdks,
-<a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">final</strong> MavenProject project, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; bundles) <strong class="jxr_keyword">throws</strong> IOException
+<a class="jxr_linenumber" name="62" href="#62">62</a>    <strong class="jxr_keyword">void</strong> packageArtifacts(<strong class="jxr_keyword">final</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeContext.html">XCodeContext</a> xCodeContext, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; configurations, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; sdks,
+<a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">final</strong> MavenProject project, <strong class="jxr_keyword">final</strong> Set&lt;String&gt; bundles) <strong class="jxr_keyword">throws</strong> IOException, XCodeException
 <a class="jxr_linenumber" name="64" href="#64">64</a>    {
 <a class="jxr_linenumber" name="65" href="#65">65</a>  
 <a class="jxr_linenumber" name="66" href="#66">66</a>      File mainArtifact = createMainArtifactFile(project);
 <a class="jxr_linenumber" name="67" href="#67">67</a>  
-<a class="jxr_linenumber" name="68" href="#68">68</a>      <strong class="jxr_keyword">final</strong> File buildDir = XCodeBuildLayout.getBuildDir(compileDir);
+<a class="jxr_linenumber" name="68" href="#68">68</a>      <strong class="jxr_keyword">final</strong> File buildDir = XCodeBuildLayout.getBuildDir(xCodeContext.getProjectRootDirectory());
 <a class="jxr_linenumber" name="69" href="#69">69</a>  
 <a class="jxr_linenumber" name="70" href="#70">70</a>      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> String configuration : configurations) {
 <a class="jxr_linenumber" name="71" href="#71">71</a>        <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> String sdk : sdks) {
-<a class="jxr_linenumber" name="72" href="#72">72</a>          packageHeaders(buildDir, configuration, sdk, project, log);
+<a class="jxr_linenumber" name="72" href="#72">72</a>          packageHeaders(xCodeContext, configuration, sdk, project, log);
 <a class="jxr_linenumber" name="73" href="#73">73</a>          log.info(<span class="jxr_string">"Headers packaged for configuration '"</span> + configuration + <span class="jxr_string">"' and sdk '"</span> + sdk + <span class="jxr_string">"' ."</span>);
 <a class="jxr_linenumber" name="74" href="#74">74</a>  
 <a class="jxr_linenumber" name="75" href="#75">75</a>          attachLibrary(buildDir, configuration, sdk, project, projectHelper, log);
 <a class="jxr_linenumber" name="76" href="#76">76</a>        }
 <a class="jxr_linenumber" name="77" href="#77">77</a>      }
 <a class="jxr_linenumber" name="78" href="#78">78</a>  
-<a class="jxr_linenumber" name="79" href="#79">79</a>      attachBundle(compileDir, project, bundles, mainArtifact);
+<a class="jxr_linenumber" name="79" href="#79">79</a>      attachBundle(xCodeContext.getProjectRootDirectory(), project, bundles, mainArtifact);
 <a class="jxr_linenumber" name="80" href="#80">80</a>  
 <a class="jxr_linenumber" name="81" href="#81">81</a>      <strong class="jxr_keyword">final</strong> File mainArtifactFile = archiveMainArtifact(project, mainArtifact);
 <a class="jxr_linenumber" name="82" href="#82">82</a>      setMainArtifact(project, mainArtifactFile);
@@ -104,7 +104,7 @@
 <a class="jxr_linenumber" name="94" href="#94">94</a>  
 <a class="jxr_linenumber" name="95" href="#95">95</a>        <strong class="jxr_keyword">if</strong> (!bundleDirectory.exists()) {
 <a class="jxr_linenumber" name="96" href="#96">96</a>          log.info(<span class="jxr_string">"Bundle directory '"</span> + bundleDirectory + <span class="jxr_string">"' does not exist. Bundle will not be attached."</span>);
-<a class="jxr_linenumber" name="97" href="#97">97</a>          <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="97" href="#97">97</a>          <strong class="jxr_keyword">continue</strong>;
 <a class="jxr_linenumber" name="98" href="#98">98</a>        }
 <a class="jxr_linenumber" name="99" href="#99">99</a>        <strong class="jxr_keyword">final</strong> File bundleFile = <strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(project.getBuild().getDirectory()), bundleName + <span class="jxr_string">".bundle"</span>);
 <a class="jxr_linenumber" name="100" href="#100">100</a> 
@@ -173,102 +173,104 @@
 <a class="jxr_linenumber" name="163" href="#163">163</a>     log.info(<span class="jxr_string">"Main artifact file '"</span> + mainArtifactTarFile + <span class="jxr_string">"' attached for "</span> + project.getArtifact());
 <a class="jxr_linenumber" name="164" href="#164">164</a>   }
 <a class="jxr_linenumber" name="165" href="#165">165</a> 
-<a class="jxr_linenumber" name="166" href="#166">166</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> packageHeaders(<strong class="jxr_keyword">final</strong> File buildDir, <strong class="jxr_keyword">final</strong> String configuration, <strong class="jxr_keyword">final</strong> String sdk, MavenProject project,
-<a class="jxr_linenumber" name="167" href="#167">167</a>         Log log) <strong class="jxr_keyword">throws</strong> IOException
+<a class="jxr_linenumber" name="166" href="#166">166</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> packageHeaders(<strong class="jxr_keyword">final</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeContext.html">XCodeContext</a> xcodeContext, <strong class="jxr_keyword">final</strong> String configuration, <strong class="jxr_keyword">final</strong> String sdk, MavenProject project,
+<a class="jxr_linenumber" name="167" href="#167">167</a>         Log log) <strong class="jxr_keyword">throws</strong> IOException, XCodeException
 <a class="jxr_linenumber" name="168" href="#168">168</a>   {
 <a class="jxr_linenumber" name="169" href="#169">169</a> 
-<a class="jxr_linenumber" name="170" href="#170">170</a>     <strong class="jxr_keyword">final</strong> File headerDir = XCodeBuildLayout.getPublicHeadersDirectory(project.getBuild().getDirectory(), buildDir, configuration, sdk);
-<a class="jxr_linenumber" name="171" href="#171">171</a> 
-<a class="jxr_linenumber" name="172" href="#172">172</a>     <strong class="jxr_keyword">if</strong> (!headerDir.canRead())
-<a class="jxr_linenumber" name="173" href="#173">173</a>       <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="174" href="#174">174</a> 
-<a class="jxr_linenumber" name="175" href="#175">175</a>     <strong class="jxr_keyword">final</strong> File headersFile = <strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(project.getBuild().getDirectory()), configuration + <span class="jxr_string">"-"</span> + sdk),
-<a class="jxr_linenumber" name="176" href="#176">176</a>           <span class="jxr_string">"headers.tar"</span>);
-<a class="jxr_linenumber" name="177" href="#177">177</a> 
-<a class="jxr_linenumber" name="178" href="#178">178</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="170" href="#170">170</a>     String publicHeaderPath = EffectiveBuildSettings.getBuildSetting(xcodeContext, log, configuration, sdk, EffectiveBuildSettings.PUBLIC_HEADERS_FOLDER_PATH);
+<a class="jxr_linenumber" name="171" href="#171">171</a>     
+<a class="jxr_linenumber" name="172" href="#172">172</a>     <strong class="jxr_keyword">final</strong> File headerDir = <strong class="jxr_keyword">new</strong> File(XCodeBuildLayout.getAppFolder(xcodeContext.getProjectRootDirectory(), configuration, sdk), publicHeaderPath);
+<a class="jxr_linenumber" name="173" href="#173">173</a> 
+<a class="jxr_linenumber" name="174" href="#174">174</a>     <strong class="jxr_keyword">if</strong> (!headerDir.canRead())
+<a class="jxr_linenumber" name="175" href="#175">175</a>       <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="176" href="#176">176</a> 
+<a class="jxr_linenumber" name="177" href="#177">177</a>     <strong class="jxr_keyword">final</strong> File headersFile = <strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(<strong class="jxr_keyword">new</strong> File(project.getBuild().getDirectory()), configuration + <span class="jxr_string">"-"</span> + sdk),
+<a class="jxr_linenumber" name="178" href="#178">178</a>           <span class="jxr_string">"headers.tar"</span>);
 <a class="jxr_linenumber" name="179" href="#179">179</a> 
-<a class="jxr_linenumber" name="180" href="#180">180</a>       archive(<span class="jxr_string">"tar"</span>, headerDir, headersFile, <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"**/*.h"</span> }, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="181" href="#181">181</a>       log.info(<span class="jxr_string">"header tar file created ("</span> + headersFile + <span class="jxr_string">")"</span>);
-<a class="jxr_linenumber" name="182" href="#182">182</a>     }
-<a class="jxr_linenumber" name="183" href="#183">183</a>     <strong class="jxr_keyword">catch</strong> (XCodeException ex) {
-<a class="jxr_linenumber" name="184" href="#184">184</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Could not archive header directory '"</span> + headerDir + <span class="jxr_string">"'"</span>, ex);
-<a class="jxr_linenumber" name="185" href="#185">185</a>     }
-<a class="jxr_linenumber" name="186" href="#186">186</a>     <strong class="jxr_keyword">catch</strong> (NoSuchArchiverException ex) {
-<a class="jxr_linenumber" name="187" href="#187">187</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Could not archive header directory '"</span> + headerDir + <span class="jxr_string">"'"</span>, ex);
-<a class="jxr_linenumber" name="188" href="#188">188</a>     }
-<a class="jxr_linenumber" name="189" href="#189">189</a> 
-<a class="jxr_linenumber" name="190" href="#190">190</a>     prepareHeaderFileForDeployment(project, configuration, sdk, headersFile);
+<a class="jxr_linenumber" name="180" href="#180">180</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="181" href="#181">181</a> 
+<a class="jxr_linenumber" name="182" href="#182">182</a>       archive(<span class="jxr_string">"tar"</span>, headerDir, headersFile, <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"**/*.h"</span> }, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="183" href="#183">183</a>       log.info(<span class="jxr_string">"header tar file created ("</span> + headersFile + <span class="jxr_string">")"</span>);
+<a class="jxr_linenumber" name="184" href="#184">184</a>     }
+<a class="jxr_linenumber" name="185" href="#185">185</a>     <strong class="jxr_keyword">catch</strong> (XCodeException ex) {
+<a class="jxr_linenumber" name="186" href="#186">186</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Could not archive header directory '"</span> + headerDir + <span class="jxr_string">"'"</span>, ex);
+<a class="jxr_linenumber" name="187" href="#187">187</a>     }
+<a class="jxr_linenumber" name="188" href="#188">188</a>     <strong class="jxr_keyword">catch</strong> (NoSuchArchiverException ex) {
+<a class="jxr_linenumber" name="189" href="#189">189</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Could not archive header directory '"</span> + headerDir + <span class="jxr_string">"'"</span>, ex);
+<a class="jxr_linenumber" name="190" href="#190">190</a>     }
 <a class="jxr_linenumber" name="191" href="#191">191</a> 
-<a class="jxr_linenumber" name="192" href="#192">192</a>   }
+<a class="jxr_linenumber" name="192" href="#192">192</a>     prepareHeaderFileForDeployment(project, configuration, sdk, headersFile);
 <a class="jxr_linenumber" name="193" href="#193">193</a> 
-<a class="jxr_linenumber" name="194" href="#194">194</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareHeaderFileForDeployment(<strong class="jxr_keyword">final</strong> MavenProject mavenProject, <strong class="jxr_keyword">final</strong> String configuration,
-<a class="jxr_linenumber" name="195" href="#195">195</a>         <strong class="jxr_keyword">final</strong> String sdk, <strong class="jxr_keyword">final</strong> File headersFile)
-<a class="jxr_linenumber" name="196" href="#196">196</a>   {
-<a class="jxr_linenumber" name="197" href="#197">197</a> 
-<a class="jxr_linenumber" name="198" href="#198">198</a>     projectHelper.attachArtifact(mavenProject, <span class="jxr_string">"headers.tar"</span>, configuration + <span class="jxr_string">"-"</span> + sdk, headersFile);
-<a class="jxr_linenumber" name="199" href="#199">199</a>   }
-<a class="jxr_linenumber" name="200" href="#200">200</a> 
-<a class="jxr_linenumber" name="201" href="#201">201</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareBundleFileForDeployment(MavenProject mavenProject, File bundleFile, String escapedBundleName)
-<a class="jxr_linenumber" name="202" href="#202">202</a>   {
-<a class="jxr_linenumber" name="203" href="#203">203</a>     projectHelper.attachArtifact(mavenProject, ZIPPED_BUNDLE_SUFFIX, escapedBundleName, bundleFile);
-<a class="jxr_linenumber" name="204" href="#204">204</a>   }
-<a class="jxr_linenumber" name="205" href="#205">205</a> 
-<a class="jxr_linenumber" name="206" href="#206">206</a>   String escapeBundleName(String bundleName)
-<a class="jxr_linenumber" name="207" href="#207">207</a>   {
-<a class="jxr_linenumber" name="208" href="#208">208</a> 
-<a class="jxr_linenumber" name="209" href="#209">209</a>     <strong class="jxr_keyword">return</strong> bundleName.replaceAll(<span class="jxr_string">"/"</span>, <span class="jxr_string">"~"</span>);
-<a class="jxr_linenumber" name="210" href="#210">210</a>   }
-<a class="jxr_linenumber" name="211" href="#211">211</a> 
-<a class="jxr_linenumber" name="212" href="#212">212</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addBundleInfoToMainArtifact(Set&lt;String&gt; bundleNames, File bundlesFile) <strong class="jxr_keyword">throws</strong> IOException
-<a class="jxr_linenumber" name="213" href="#213">213</a>   {
-<a class="jxr_linenumber" name="214" href="#214">214</a>     <strong class="jxr_keyword">final</strong> PrintWriter pw = <strong class="jxr_keyword">new</strong> PrintWriter(<strong class="jxr_keyword">new</strong> FileWriter(bundlesFile));
-<a class="jxr_linenumber" name="215" href="#215">215</a> 
-<a class="jxr_linenumber" name="216" href="#216">216</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="194" href="#194">194</a>   }
+<a class="jxr_linenumber" name="195" href="#195">195</a> 
+<a class="jxr_linenumber" name="196" href="#196">196</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareHeaderFileForDeployment(<strong class="jxr_keyword">final</strong> MavenProject mavenProject, <strong class="jxr_keyword">final</strong> String configuration,
+<a class="jxr_linenumber" name="197" href="#197">197</a>         <strong class="jxr_keyword">final</strong> String sdk, <strong class="jxr_keyword">final</strong> File headersFile)
+<a class="jxr_linenumber" name="198" href="#198">198</a>   {
+<a class="jxr_linenumber" name="199" href="#199">199</a> 
+<a class="jxr_linenumber" name="200" href="#200">200</a>     projectHelper.attachArtifact(mavenProject, <span class="jxr_string">"headers.tar"</span>, configuration + <span class="jxr_string">"-"</span> + sdk, headersFile);
+<a class="jxr_linenumber" name="201" href="#201">201</a>   }
+<a class="jxr_linenumber" name="202" href="#202">202</a> 
+<a class="jxr_linenumber" name="203" href="#203">203</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> prepareBundleFileForDeployment(MavenProject mavenProject, File bundleFile, String escapedBundleName)
+<a class="jxr_linenumber" name="204" href="#204">204</a>   {
+<a class="jxr_linenumber" name="205" href="#205">205</a>     projectHelper.attachArtifact(mavenProject, ZIPPED_BUNDLE_SUFFIX, escapedBundleName, bundleFile);
+<a class="jxr_linenumber" name="206" href="#206">206</a>   }
+<a class="jxr_linenumber" name="207" href="#207">207</a> 
+<a class="jxr_linenumber" name="208" href="#208">208</a>   String escapeBundleName(String bundleName)
+<a class="jxr_linenumber" name="209" href="#209">209</a>   {
+<a class="jxr_linenumber" name="210" href="#210">210</a> 
+<a class="jxr_linenumber" name="211" href="#211">211</a>     <strong class="jxr_keyword">return</strong> bundleName.replaceAll(<span class="jxr_string">"/"</span>, <span class="jxr_string">"~"</span>);
+<a class="jxr_linenumber" name="212" href="#212">212</a>   }
+<a class="jxr_linenumber" name="213" href="#213">213</a> 
+<a class="jxr_linenumber" name="214" href="#214">214</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> addBundleInfoToMainArtifact(Set&lt;String&gt; bundleNames, File bundlesFile) <strong class="jxr_keyword">throws</strong> IOException
+<a class="jxr_linenumber" name="215" href="#215">215</a>   {
+<a class="jxr_linenumber" name="216" href="#216">216</a>     <strong class="jxr_keyword">final</strong> PrintWriter pw = <strong class="jxr_keyword">new</strong> PrintWriter(<strong class="jxr_keyword">new</strong> FileWriter(bundlesFile));
 <a class="jxr_linenumber" name="217" href="#217">217</a> 
-<a class="jxr_linenumber" name="218" href="#218">218</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> String bundleName : bundleNames) {
-<a class="jxr_linenumber" name="219" href="#219">219</a>         pw.println(bundleName);
-<a class="jxr_linenumber" name="220" href="#220">220</a> 
-<a class="jxr_linenumber" name="221" href="#221">221</a>       }
-<a class="jxr_linenumber" name="222" href="#222">222</a>     }
-<a class="jxr_linenumber" name="223" href="#223">223</a>     <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="224" href="#224">224</a>       pw.close();
-<a class="jxr_linenumber" name="225" href="#225">225</a>     }
-<a class="jxr_linenumber" name="226" href="#226">226</a>   }
-<a class="jxr_linenumber" name="227" href="#227">227</a> 
-<a class="jxr_linenumber" name="228" href="#228">228</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> attachLibrary(File buildDir, <strong class="jxr_keyword">final</strong> String configuration, <strong class="jxr_keyword">final</strong> String sdk,
-<a class="jxr_linenumber" name="229" href="#229">229</a>         <strong class="jxr_keyword">final</strong> MavenProject project, <strong class="jxr_keyword">final</strong> MavenProjectHelper projectHelper, Log log)
-<a class="jxr_linenumber" name="230" href="#230">230</a>   {
-<a class="jxr_linenumber" name="231" href="#231">231</a> 
-<a class="jxr_linenumber" name="232" href="#232">232</a>     <strong class="jxr_keyword">final</strong> File fatBinary = XCodeBuildLayout.getBinary(buildDir, configuration, sdk, project.getArtifactId());
+<a class="jxr_linenumber" name="218" href="#218">218</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="219" href="#219">219</a> 
+<a class="jxr_linenumber" name="220" href="#220">220</a>       <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> String bundleName : bundleNames) {
+<a class="jxr_linenumber" name="221" href="#221">221</a>         pw.println(bundleName);
+<a class="jxr_linenumber" name="222" href="#222">222</a> 
+<a class="jxr_linenumber" name="223" href="#223">223</a>       }
+<a class="jxr_linenumber" name="224" href="#224">224</a>     }
+<a class="jxr_linenumber" name="225" href="#225">225</a>     <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="226" href="#226">226</a>       pw.close();
+<a class="jxr_linenumber" name="227" href="#227">227</a>     }
+<a class="jxr_linenumber" name="228" href="#228">228</a>   }
+<a class="jxr_linenumber" name="229" href="#229">229</a> 
+<a class="jxr_linenumber" name="230" href="#230">230</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> attachLibrary(File buildDir, <strong class="jxr_keyword">final</strong> String configuration, <strong class="jxr_keyword">final</strong> String sdk,
+<a class="jxr_linenumber" name="231" href="#231">231</a>         <strong class="jxr_keyword">final</strong> MavenProject project, <strong class="jxr_keyword">final</strong> MavenProjectHelper projectHelper, Log log)
+<a class="jxr_linenumber" name="232" href="#232">232</a>   {
 <a class="jxr_linenumber" name="233" href="#233">233</a> 
-<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">if</strong> (!fatBinary.exists())
-<a class="jxr_linenumber" name="235" href="#235">235</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(fatBinary + <span class="jxr_string">" should be attached but does not exist."</span>);
-<a class="jxr_linenumber" name="236" href="#236">236</a> 
-<a class="jxr_linenumber" name="237" href="#237">237</a>     <strong class="jxr_keyword">final</strong> String classifier = configuration + <span class="jxr_string">"-"</span> + sdk;
+<a class="jxr_linenumber" name="234" href="#234">234</a>     <strong class="jxr_keyword">final</strong> File fatBinary = XCodeBuildLayout.getBinary(buildDir, configuration, sdk, project.getArtifactId());
+<a class="jxr_linenumber" name="235" href="#235">235</a> 
+<a class="jxr_linenumber" name="236" href="#236">236</a>     <strong class="jxr_keyword">if</strong> (!fatBinary.exists())
+<a class="jxr_linenumber" name="237" href="#237">237</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(fatBinary + <span class="jxr_string">" should be attached but does not exist."</span>);
 <a class="jxr_linenumber" name="238" href="#238">238</a> 
-<a class="jxr_linenumber" name="239" href="#239">239</a>     projectHelper.attachArtifact(project, <span class="jxr_string">"a"</span>, classifier, fatBinary);
+<a class="jxr_linenumber" name="239" href="#239">239</a>     <strong class="jxr_keyword">final</strong> String classifier = configuration + <span class="jxr_string">"-"</span> + sdk;
 <a class="jxr_linenumber" name="240" href="#240">240</a> 
-<a class="jxr_linenumber" name="241" href="#241">241</a>     log.info(<span class="jxr_string">"Archive file '"</span> + fatBinary + <span class="jxr_string">"' attached as side artifact for '"</span> + project.getArtifact()
-<a class="jxr_linenumber" name="242" href="#242">242</a>           + <span class="jxr_string">"' with classifier '"</span> + classifier + <span class="jxr_string">"'."</span>);
-<a class="jxr_linenumber" name="243" href="#243">243</a>   }
-<a class="jxr_linenumber" name="244" href="#244">244</a> 
-<a class="jxr_linenumber" name="245" href="#245">245</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> archive(<strong class="jxr_keyword">final</strong> String archiverType, <strong class="jxr_keyword">final</strong> File rootDir, <strong class="jxr_keyword">final</strong> File archive,
-<a class="jxr_linenumber" name="246" href="#246">246</a>         <strong class="jxr_keyword">final</strong> String[] includes, <strong class="jxr_keyword">final</strong> String[] excludes) <strong class="jxr_keyword">throws</strong> NoSuchArchiverException,
-<a class="jxr_linenumber" name="247" href="#247">247</a>         IOException, <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeException.html">XCodeException</a>
-<a class="jxr_linenumber" name="248" href="#248">248</a>   {
-<a class="jxr_linenumber" name="249" href="#249">249</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="250" href="#250">250</a>       <strong class="jxr_keyword">final</strong> Archiver archiver = archiverManager.getArchiver(archiverType);
-<a class="jxr_linenumber" name="251" href="#251">251</a>       archiver.addDirectory(rootDir, includes, excludes);
-<a class="jxr_linenumber" name="252" href="#252">252</a>       archiver.setDestFile(archive);
-<a class="jxr_linenumber" name="253" href="#253">253</a>       archiver.createArchive();
-<a class="jxr_linenumber" name="254" href="#254">254</a>     }
-<a class="jxr_linenumber" name="255" href="#255">255</a>     <strong class="jxr_keyword">catch</strong> (ArchiverException ex) {
-<a class="jxr_linenumber" name="256" href="#256">256</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeException.html">XCodeException</a>(<span class="jxr_string">"Could not archive folder '"</span> + rootDir + <span class="jxr_string">"' into '"</span> + archive + <span class="jxr_string">"': "</span> + ex.getMessage(),
-<a class="jxr_linenumber" name="257" href="#257">257</a>             ex);
-<a class="jxr_linenumber" name="258" href="#258">258</a>     }
-<a class="jxr_linenumber" name="259" href="#259">259</a>   }
-<a class="jxr_linenumber" name="260" href="#260">260</a> 
-<a class="jxr_linenumber" name="261" href="#261">261</a> }
+<a class="jxr_linenumber" name="241" href="#241">241</a>     projectHelper.attachArtifact(project, <span class="jxr_string">"a"</span>, classifier, fatBinary);
+<a class="jxr_linenumber" name="242" href="#242">242</a> 
+<a class="jxr_linenumber" name="243" href="#243">243</a>     log.info(<span class="jxr_string">"Archive file '"</span> + fatBinary + <span class="jxr_string">"' attached as side artifact for '"</span> + project.getArtifact()
+<a class="jxr_linenumber" name="244" href="#244">244</a>           + <span class="jxr_string">"' with classifier '"</span> + classifier + <span class="jxr_string">"'."</span>);
+<a class="jxr_linenumber" name="245" href="#245">245</a>   }
+<a class="jxr_linenumber" name="246" href="#246">246</a> 
+<a class="jxr_linenumber" name="247" href="#247">247</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">void</strong> archive(<strong class="jxr_keyword">final</strong> String archiverType, <strong class="jxr_keyword">final</strong> File rootDir, <strong class="jxr_keyword">final</strong> File archive,
+<a class="jxr_linenumber" name="248" href="#248">248</a>         <strong class="jxr_keyword">final</strong> String[] includes, <strong class="jxr_keyword">final</strong> String[] excludes) <strong class="jxr_keyword">throws</strong> NoSuchArchiverException,
+<a class="jxr_linenumber" name="249" href="#249">249</a>         IOException, <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeException.html">XCodeException</a>
+<a class="jxr_linenumber" name="250" href="#250">250</a>   {
+<a class="jxr_linenumber" name="251" href="#251">251</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="252" href="#252">252</a>       <strong class="jxr_keyword">final</strong> Archiver archiver = archiverManager.getArchiver(archiverType);
+<a class="jxr_linenumber" name="253" href="#253">253</a>       archiver.addDirectory(rootDir, includes, excludes);
+<a class="jxr_linenumber" name="254" href="#254">254</a>       archiver.setDestFile(archive);
+<a class="jxr_linenumber" name="255" href="#255">255</a>       archiver.createArchive();
+<a class="jxr_linenumber" name="256" href="#256">256</a>     }
+<a class="jxr_linenumber" name="257" href="#257">257</a>     <strong class="jxr_keyword">catch</strong> (ArchiverException ex) {
+<a class="jxr_linenumber" name="258" href="#258">258</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/sap/prd/mobile/ios/mios/XCodeException.html">XCodeException</a>(<span class="jxr_string">"Could not archive folder '"</span> + rootDir + <span class="jxr_string">"' into '"</span> + archive + <span class="jxr_string">"': "</span> + ex.getMessage(),
+<a class="jxr_linenumber" name="259" href="#259">259</a>             ex);
+<a class="jxr_linenumber" name="260" href="#260">260</a>     }
+<a class="jxr_linenumber" name="261" href="#261">261</a>   }
+<a class="jxr_linenumber" name="262" href="#262">262</a> 
+<a class="jxr_linenumber" name="263" href="#263">263</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
