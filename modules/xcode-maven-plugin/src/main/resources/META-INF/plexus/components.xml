@@ -68,31 +68,31 @@
             <id>default</id>
             <phases>
               <validate>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:check-prerequisites
+                com.evry.finance.cm:evry-xcode-maven-plugin:check-prerequisites
               </validate>
               <initialize>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:set-default-configuration,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:skip-library-build,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcode-project-validate,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:prepare-xcode-build
+                com.evry.finance.cm:evry-xcode-maven-plugin:set-default-configuration,
+                com.evry.finance.cm:evry-xcode-maven-plugin:skip-library-build,
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcode-project-validate,
+                com.evry.finance.cm:evry-xcode-maven-plugin:prepare-xcode-build
               </initialize>
               <process-sources>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:copy-sources
+                com.evry.finance.cm:evry-xcode-maven-plugin:copy-sources
               </process-sources>
               <compile>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:set-default-doxygen-configuration,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcodebuild
+                com.evry.finance.cm:evry-xcode-maven-plugin:set-default-doxygen-configuration,
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcodebuild
               </compile>
               <package>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:attach-version-info,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcode-package,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-fat-lib
+                com.evry.finance.cm:evry-xcode-maven-plugin:attach-version-info,
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcode-package,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-fat-lib
               </package>
               <install>
                 org.apache.maven.plugins:maven-install-plugin:install
               </install>
               <deploy>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:pre-deploy,              
+                com.evry.finance.cm:evry-xcode-maven-plugin:pre-deploy,
                 org.apache.maven.plugins:maven-deploy-plugin:deploy
               </deploy>
             </phases>
@@ -101,7 +101,7 @@
             <id>clean</id>
             <phases>
               <clean>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:clean,
+                com.evry.finance.cm:evry-xcode-maven-plugin:clean,
                 org.apache.maven.plugins:maven-clean-plugin:clean
               </clean>
             </phases>
@@ -119,29 +119,29 @@
             <id>default</id>
             <phases>
               <validate>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:check-prerequisites
+                com.evry.finance.cm:evry-xcode-maven-plugin:check-prerequisites
               </validate>
               <initialize>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:set-default-configuration,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:skip-library-build,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcode-project-validate,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:prepare-xcode-build
+                com.evry.finance.cm:evry-xcode-maven-plugin:set-default-configuration,
+                com.evry.finance.cm:evry-xcode-maven-plugin:skip-library-build,
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcode-project-validate,
+                com.evry.finance.cm:evry-xcode-maven-plugin:prepare-xcode-build
               </initialize>
               <process-sources>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:copy-sources
+                com.evry.finance.cm:evry-xcode-maven-plugin:copy-sources
               </process-sources>
               <compile>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcodebuild
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcodebuild
               </compile>
               <package>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:attach-version-info,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-framework
+                com.evry.finance.cm:evry-xcode-maven-plugin:attach-version-info,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-framework
               </package>
               <install>
                 org.apache.maven.plugins:maven-install-plugin:install
               </install>
               <deploy>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:pre-deploy,              
+                com.evry.finance.cm:evry-xcode-maven-plugin:pre-deploy,
                 org.apache.maven.plugins:maven-deploy-plugin:deploy
               </deploy>
             </phases>
@@ -150,7 +150,7 @@
             <id>clean</id>
             <phases>
               <clean>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:clean,
+                com.evry.finance.cm:evry-xcode-maven-plugin:clean,
                 org.apache.maven.plugins:maven-clean-plugin:clean
               </clean>
             </phases>
@@ -168,35 +168,35 @@
             <id>default</id>
             <phases>
               <validate>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:check-prerequisites
+                com.evry.finance.cm:evry-xcode-maven-plugin:check-prerequisites
               </validate>
               <initialize>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:change-artifact-id,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:set-default-configuration,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcode-project-validate,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:prepare-xcode-build
+                com.evry.finance.cm:evry-xcode-maven-plugin:change-artifact-id,
+                com.evry.finance.cm:evry-xcode-maven-plugin:set-default-configuration,
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcode-project-validate,
+                com.evry.finance.cm:evry-xcode-maven-plugin:prepare-xcode-build
               </initialize>
               <process-sources>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:copy-sources,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:change-versions-in-plist,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:change-app-id
+                com.evry.finance.cm:evry-xcode-maven-plugin:copy-sources,
+                com.evry.finance.cm:evry-xcode-maven-plugin:change-versions-in-plist,
+                com.evry.finance.cm:evry-xcode-maven-plugin:change-app-id
               </process-sources>
               <compile>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:xcodebuild
+                com.evry.finance.cm:evry-xcode-maven-plugin:xcodebuild
               </compile>
               <package>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:attach-version-info,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-application,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-dsym,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-ipa,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:generate-ota-html,
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:package-metadata
+                com.evry.finance.cm:evry-xcode-maven-plugin:attach-version-info,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-application,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-dsym,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-ipa,
+                com.evry.finance.cm:evry-xcode-maven-plugin:generate-ota-html,
+                com.evry.finance.cm:evry-xcode-maven-plugin:package-metadata
               </package>
               <install>
                 org.apache.maven.plugins:maven-install-plugin:install
               </install>
               <deploy>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:pre-deploy,
+                com.evry.finance.cm:evry-xcode-maven-plugin:pre-deploy,
                 org.apache.maven.plugins:maven-deploy-plugin:deploy
               </deploy>
             </phases>
@@ -205,7 +205,7 @@
             <id>clean</id>
             <phases>
               <clean>
-                com.sap.prd.mobile.ios.mios:xcode-maven-plugin:clean,
+                com.evry.finance.cm:evry-xcode-maven-plugin:clean,
                 org.apache.maven.plugins:maven-clean-plugin:clean
               </clean>
             </phases>
