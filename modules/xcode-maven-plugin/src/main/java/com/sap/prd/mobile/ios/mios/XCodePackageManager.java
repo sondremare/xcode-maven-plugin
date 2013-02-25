@@ -193,6 +193,13 @@ class XCodePackageManager
     projectHelper.attachArtifact(mavenProject, "headers.tar", configuration + "-" + sdk, headersFile);
   }
 
+    private void prepareHeaderFileForDeployment(final MavenProject mavenProject, final String target, final String configuration,
+                                                final String sdk, final File headersFile)
+    {
+
+        projectHelper.attachArtifact(mavenProject, "headers.tar", target+"-"+configuration + "-" + sdk, headersFile);
+    }
+
   private void prepareBundleFileForDeployment(MavenProject mavenProject, File bundleFile, String escapedBundleName)
   {
     projectHelper.attachArtifact(mavenProject, ZIPPED_BUNDLE_SUFFIX, escapedBundleName, bundleFile);

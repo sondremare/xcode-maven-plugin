@@ -69,7 +69,7 @@ public class XCodeIpaPackageMojo extends BuildContextAwareMojo
               "Using product name '" + productName + " (fixed product name '" + fixedProductName + "')"
                     + "' for configuration '" + configuration + "' and sdk '" + sdk + "'.");
 
-        File rootDir = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), configuration, sdk);
+        File rootDir = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), target, configuration, sdk);
         final File ipaFile = zipSubfolder(rootDir, productName + ".app", fixedProductName + ".ipa", "Payload/");
 
         prepareIpaFileForDeployment(project, configuration, sdk, ipaFile);
@@ -82,7 +82,7 @@ public class XCodeIpaPackageMojo extends BuildContextAwareMojo
         final String sdk, final File ipaFile)
   {
 
-    projectHelper.attachArtifact(mavenProject, ipaFile, getIpaClassifier(configuration, sdk));
+    projectHelper.attachArtifact(mavenProject, ipaFile, getIpaClassifier(target, configuration, sdk));
   }
 
   /**
@@ -96,5 +96,10 @@ public class XCodeIpaPackageMojo extends BuildContextAwareMojo
   {
     return configuration + "-" + sdk;
   }
+
+    static String getIpaClassifier(String target, String configuration, String sdk)
+    {
+        return target + "-" +configuration + "-" + sdk;
+    }
 
 }

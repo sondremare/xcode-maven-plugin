@@ -58,13 +58,13 @@ public class XCodePackageAppMojo extends BuildContextAwareMojo
 
     final String fixedProductName = getFixedProductName(productName);
 
-    final File rootDir = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), config, sdk);
+    final File rootDir = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), target, config, sdk);
 
     final File destination = zipSubfolder(rootDir, productName + ".app", fixedProductName + ".app.zip", null);
 
     getLog().info("Application file packaged (" + destination + ")");
 
-    prepareApplicationFileForDeployment(project, config, sdk, destination);
+    prepareApplicationFileForDeployment(project, target, config, sdk, destination);
   }
 
   private void prepareApplicationFileForDeployment(final MavenProject mavenProject, final String configuration,
@@ -72,6 +72,13 @@ public class XCodePackageAppMojo extends BuildContextAwareMojo
   {
 
     projectHelper.attachArtifact(mavenProject, "zip", configuration + "-" + sdk + "-app", applicationFile);
+  }
+
+    private void prepareApplicationFileForDeployment(final MavenProject mavenProject, final String target, final String configuration,
+                                                     final String sdk, final File applicationFile)
+    {
+
+        projectHelper.attachArtifact(mavenProject, "zip", target + "-" +configuration + "-" + sdk + "-app", applicationFile);
   }
 
 }

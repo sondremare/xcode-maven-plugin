@@ -90,7 +90,7 @@ public class XCodePackageDSymMojo extends BuildContextAwareMojo
 
     final String fixedProductName = getFixedProductName(productName);
     
-    final File root = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), config, sdk);
+    final File root = XCodeBuildLayout.getAppFolder(getXCodeCompileDirectory(), target, config, sdk);
     final File dsymRoot = new File(root, productName + ".app.dSYM");
   
     if (dsymRoot.canRead()) {
@@ -105,7 +105,7 @@ public class XCodePackageDSymMojo extends BuildContextAwareMojo
       archiver.createArchive();
       getLog().info("dSYM packaged (" + destination + ")");
 
-      prepareDSymFileForDeployment(project, config, sdk, destination);
+      prepareDSymFileForDeployment(project, target, config, sdk, destination);
     }
     else {
 			if (shouldExistDSym(sdk, config)) {
@@ -144,5 +144,12 @@ public class XCodePackageDSymMojo extends BuildContextAwareMojo
 
     projectHelper.attachArtifact(mavenProject, "zip", configuration + "-" + sdk + "-app.dSYM", dSymFile);
   }
+
+    private void prepareDSymFileForDeployment(final MavenProject mavenProject, final String target, final String configuration,
+                                              final String sdk, final File dSymFile)
+    {
+
+        projectHelper.attachArtifact(mavenProject, "zip", target+ "-" +configuration + "-" + sdk + "-app.dSYM", dSymFile);
+    }
 
 }

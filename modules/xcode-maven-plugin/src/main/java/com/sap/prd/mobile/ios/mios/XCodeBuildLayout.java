@@ -41,10 +41,27 @@ class XCodeBuildLayout
     return new File(buildDir, configuration + "-" + sdk + "/lib" + projectName + ".a");
   }
 
+    static File getBinary(final File buildDir, final String target, final String configuration, final String sdk, final String projectName)
+    {
+        File file = new File(buildDir, target+ "-" +configuration + "-" + sdk + "/lib" + projectName + ".a");
+        if (file.exists()) return file;
+        return new File(buildDir, configuration + "-" + sdk + "/lib" + projectName + ".a");
+    }
+
   static File getBundleDirectory(final File srcDir, final String bundleName)
   {
 
     return new File(srcDir, bundleName + ".bundle");
+  }
+
+  // TODO invent better method name
+  static File getAppFolder(final File baseDirectory, final String target, final String configuration, final String sdk)
+  {
+     File file = new File(getBuildDir(baseDirectory), target + "-" +configuration + "-" + sdk);
+     if (file.exists()) {
+         return file;
+     }
+     return new File(getBuildDir(baseDirectory), configuration + "-" + sdk);
   }
 
   // TODO invent better method name
